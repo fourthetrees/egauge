@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 from src.egauge import query_dbfmt
+from src.psql import push
+from os.path import dirname
+import os
 import time
 import json
 
@@ -23,21 +26,21 @@ def query_gauges(gauges,after=None):
 
 # Do something with the data.
 def handle_data(data):
-    for i in range(10):
-        print(data[i])
+    push(data)
 
 # Update the nonce.
 def update_nonce(nonce):
     with open('tmp/nonce.txt','w') as fp:
         fp.write(str(nonce))
 
+# RunnnnN!!!
 def Main():
+    os.chdir(dirname(__file__))
     gauges,nonce = get_params()
     data = query_gauges(gauges,after=nonce)
     nonce_new = max(data,key=lambda d: d.datetime).datetime
     handle_data(data)
     update_nonce(nonce_new)
-
 
 if __name__ == '__main__':
     Main()

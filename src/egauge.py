@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from collections import namedtuple
+from data_structs import Row
 import requests
 
 # Query a specified egauge.
@@ -19,13 +20,12 @@ def query(gauge,after=None):
 # Convert into row format.
 # Returns list of named tuples.
 def dbfmt(gauge_id,gauge,data):
-    row = namedtuple('row',['datetime','sensor_id','enduse','value'])
     dtimes = data['Date & Time']
     values = {k: data[k] for k in data if k != 'Date & Time'}
     sn_id = gauge_id + '_{}'.format(gauge)
     rows = []
     for vt in values:
-        fmt = lambda dt,val: row(dt, sn_id, vt, val)
+        fmt = lambda dt,val: Row(dt, sn_id, vt, val)
         rows += [fmt(t,p) for t,p in zip(dtimes,values[vt])]
     return rows
 
