@@ -12,7 +12,12 @@ def push(data):
 def exec_push(data):
     cmd = 'INSERT INTO egauge_test (datetime, sensor_id, enduse, value) VALUES (to_timestamp(%s), %s, %s, %s)'
     with psql.connect(database='frog_uhm') as con:
-        with con.cursor() as cur:
-            cur.executemany(cmd,data)
+        for row in data:
+            try:
+                with con.cursor() as cur:
+                    cur.execute(cmd,row)
+                con.commit()
+            except psql.IntegrityError:
+                con.rollback()
     con.close()
 

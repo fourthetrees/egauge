@@ -38,7 +38,7 @@ def handle_data(data):
 # Update the nonce.
 def update_nonce(nonce_new):
     with open('tmp/nonce.json','w') as fp:
-        json.dump(nonce_new)
+        json.dump(nonce_new,fp)
 
 # RunnnnN!!!
 def run():
