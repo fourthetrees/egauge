@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from src.egauge import query_dbfmt
 from src.psql import exec_push
+from src.qlog import mklog
 from os.path import dirname
 import os
 import time
@@ -36,13 +37,19 @@ def update_nonce(nonce):
         fp.write(str(nonce))
 
 # RunnnnN!!!
-def Main():
+def run():
     os.chdir(dirname(__file__))
     gauges,nonce,auth= get_params()
     data = query_gauges(gauges,after=nonce)
     nonce_new = max(data,key=lambda d: d.datetime).datetime
     handle_data(data,auth)
     update_nonce(nonce_new)
+
+def Main():
+    try:
+        run()
+    except Exception as err:
+        mklog(err)
 
 if __name__ == '__main__':
     Main()
