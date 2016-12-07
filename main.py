@@ -12,34 +12,39 @@ def get_params():
     with open('tmp/gauges.json') as fp:
         gauges = json.load(fp)
     try:
-        with open('tmp/nonce.txt') as fp:
-            nonce = float(fp.read())
+        with open('tmp/nonce.json') as fp:
+            nonce = json.load(fp)
     except:
-        nonce = time.time() - 86400
+        nonce = {}
+    delta =  time.time() - 86400
+    for g in gauges if g not in nonce:
+        nonce[g] = delta
     return gauges,nonce
 
 # Query all gauges and return values.
-def query_gauges(gauges,after=None):
+def query_gauges(gauges,nonce):
     rows = []
+    nonce_new = {}
     for g in gauges:
-        rows += query_dbfmt(g,gauges[g],after)
-    return rows
+        r = query_dbfmt(g,gauges[g],nonce[g])
+        nonce_new[g] = max(r,key=lambda x: x.datetime).datetime if r else nonce[g]
+        rows += r
+    return rows, nonce_new
 
 # Do something with the data.
 def handle_data(data):
     exec_push(data)
 
 # Update the nonce.
-def update_nonce(nonce):
-    with open('tmp/nonce.txt','w') as fp:
-        fp.write(str(nonce))
+def update_nonce(nonce_new):
+    with open('tmp/nonce.json','w') as fp:
+        json.dump(nonce_new)
 
 # RunnnnN!!!
 def run():
     os.chdir(dirname(__file__))
     gauges,nonce= get_params()
-    data = query_gauges(gauges,after=nonce)
-    nonce_new = max(data,key=lambda d: d.datetime).datetime
+    data,nonce_new = query_gauges(gauges,nonce)
     handle_data(data)
     update_nonce(nonce_new)
 
