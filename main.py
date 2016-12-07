@@ -17,7 +17,7 @@ def get_params():
     except:
         nonce = {}
     delta =  time.time() - 86400
-    for g in gauges if g not in nonce:
+    for g in (x for x in gauges if not x in nonce):
         nonce[g] = delta
     return gauges,nonce
 
