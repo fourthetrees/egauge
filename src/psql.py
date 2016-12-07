@@ -10,8 +10,8 @@ def push(data):
     exec_push(data)
 
 def exec_push(data):
-    cmd = 'INSERT INTO ... (datetime, sensor_id, enduse, value) VALUES (%s, %s, %s, %s)'
-    with psql.connect('dbname=... user=...') as con:
+    cmd = 'INSERT INTO egauge_test (datetime, sensor_id, enduse, value) VALUES (%s, %s, %s, %s)'
+    with psql.connect('dbname=frog_uhm user=postgres') as con:
         with con.cursor() as cur:
             cur.executemany(cmd,data)
     con.close()
