@@ -11,14 +11,12 @@ import json
 def get_params():
     with open('tmp/gauges.json') as fp:
         gauges = json.load(fp)
-    with open('tmp/auth.json') as fp:
-        auth = json.load(fp)
     try:
         with open('tmp/nonce.txt') as fp:
             nonce = float(fp.read())
     except:
         nonce = time.time() - 86400
-    return gauges,nonce,auth
+    return gauges,nonce
 
 # Query all gauges and return values.
 def query_gauges(gauges,after=None):
@@ -28,8 +26,8 @@ def query_gauges(gauges,after=None):
     return rows
 
 # Do something with the data.
-def handle_data(data,auth):
-    exec_push(data,auth)
+def handle_data(data):
+    exec_push(data)
 
 # Update the nonce.
 def update_nonce(nonce):
@@ -39,10 +37,10 @@ def update_nonce(nonce):
 # RunnnnN!!!
 def run():
     os.chdir(dirname(__file__))
-    gauges,nonce,auth= get_params()
+    gauges,nonce= get_params()
     data = query_gauges(gauges,after=nonce)
     nonce_new = max(data,key=lambda d: d.datetime).datetime
-    handle_data(data,auth)
+    handle_data(data)
     update_nonce(nonce_new)
 
 def Main():

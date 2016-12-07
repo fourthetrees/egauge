@@ -9,7 +9,7 @@ def push(data):
             raise Exception("Invalid Row Type!")
     exec_push(data)
 
-def exec_push(data,auth):
+def exec_push(data):
     cmd = 'INSERT INTO egauge_test (datetime, sensor_id, enduse, value) VALUES (to_timestamp(%s), %s, %s, %s)'
     with psql.connect(database='frog_uhm') as con:
         with con.cursor() as cur:
