@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from collections import namedtuple
-from data_structs import Row
+from src.data_structs import Row
 import requests
 
 # Query a specified egauge.

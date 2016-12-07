@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import psycopg2 as psql
-from data_structs import Row
+from src.data_structs import Row
 
 
 def push(data):
@@ -9,9 +9,9 @@ def push(data):
             raise Exception("Invalid Row Type!")
     exec_push(data)
 
-def exec_push(data):
-    cmd = 'INSERT INTO egauge_test (datetime, sensor_id, enduse, value) VALUES (%s, %s, %s, %s)'
-    with psql.connect('dbname=frog_uhm user=postgres') as con:
+def exec_push(data,auth):
+    cmd = 'INSERT INTO egauge_test (datetime, sensor_id, enduse, value) VALUES (to_timestamp(%s), %s, %s, %s)'
+    with psql.connect(database='frog_uhm') as con:
         with con.cursor() as cur:
             cur.executemany(cmd,data)
     con.close()
