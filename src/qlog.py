@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import time
 
+# Generate and update a simple and readable log file.
 def mklog(text):
     hdr = 'logtime............{}'.format(int(time.time()))
     ftr = '...................endlog\n'
