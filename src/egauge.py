@@ -15,8 +15,6 @@ def query(gauge,after=None):
     columns = list(zip(*rows))
     return {h: list(map(float,columns[i])) for i,h in enumerate(headers)}
 
-
-
 # Convert into row format.
 # Returns list of named tuples.
 def dbfmt(gauge_id,gauge,data):
@@ -34,4 +32,3 @@ def dbfmt(gauge_id,gauge,data):
 def query_dbfmt(gauge_id,gauge,after=None):
     data = query(gauge,after)
     return dbfmt(gauge_id,gauge,data)
-
