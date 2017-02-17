@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from src.egauge import query_dbfmt
 from src.psql import exec_push
+from src.csvfile import to_csv
 from src.qlog import mklog
 from os.path import dirname
 import os
@@ -32,8 +33,9 @@ def query_gauges(gauges,nonce):
     return rows, nonce_new
 
 # Do something with the data.
-def handle_data(data):
-    exec_push(data)
+def handle_data(data,fname='output'):
+    #exec_push(data)
+    to_csv(data,fname)
 
 # Update the nonce.
 def update_nonce(nonce_new):

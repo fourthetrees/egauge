@@ -1,0 +1,4 @@
+logtime............1487292146
+'fieldnames' is an invalid keyword argument for this function
+...................endlog
+
