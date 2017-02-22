@@ -1,60 +1,51 @@
 #!/usr/bin/env python3
-from src.egauge import query_dbfmt
-from src.psql import exec_push
-from src.csvfile import to_csv
-from src.qlog import mklog
+from src.egauge import query_gauges
+from src.custom_mapping import fmt_mapping
+from src.to_psql import to_psql
+from src.to_csv import to_csv
+from src.projects import get_params, update_nonce
+from src.errlog import mklog
 from os.path import dirname
 import os
 import time
 import json
 
-# Loage gauges and nonce.
-def get_params():
-    with open('tmp/gauges.json') as fp:
-        gauges = json.load(fp)
-    try:
-        with open('tmp/nonce.json') as fp:
-            nonce = json.load(fp)
-    except:
-        nonce = {}
-    delta =  time.time() - 86400
-    for g in (x for x in gauges if not x in nonce):
-        nonce[g] = delta
-    return gauges,nonce
-
-# Query all gauges and return values.
-def query_gauges(gauges,nonce):
-    rows = []
-    nonce_new = {}
-    for g in gauges:
-        r = query_dbfmt(g,gauges[g],nonce[g])
-        nonce_new[g] = max(r,key=lambda x: x.datetime).datetime if r else nonce[g]
-        rows += r
-    return rows, nonce_new
+# RunnnnN!!!
+def run(project):
+    os.chdir(dirname(__file__))
+    config,nonce= get_params(project)
+    data,nonce_new = query_gauges(config["gauges"],nonce)
+    handle_data(data,config,project)
+    update_nonce(project,nonce_new)
 
 # Do something with the data.
-def handle_data(data,fname='output'):
-    #exec_push(data)
-    to_csv(data,fname)
-
-# Update the nonce.
-def update_nonce(nonce_new):
-    with open('tmp/nonce.json','w') as fp:
-        json.dump(nonce_new,fp)
-
-# RunnnnN!!!
-def run():
-    os.chdir(dirname(__file__))
-    gauges,nonce= get_params()
-    data,nonce_new = query_gauges(gauges,nonce)
-    handle_data(data)
-    update_nonce(nonce_new)
+def handle_data(data,config,project):
+    if 'mapping' in config:
+        data = fmt_mapping(data,config['mapping'])
+    if not data: return
+    if not 'export_fmt' in config:
+        raise Exception('no export format specified for {}!'.format(project))
+    export_config = { k.lower() : config['export_fmt'][k]
+                    for k in config['export_fmt']      }
+    for k in export_config:
+        if k == 'csv':
+            to_csv(data,project,export_config['csv'])
+        elif k == 'psql':
+            to_psql(data,project,export_config['psql'])
+        else:
+            raise Exception('unrecognized export format: {}'.format(k))
 
 def Main():
-    try:
-        run()
-    except Exception as err:
-        mklog(err)
-
+    active_projects = ['maui-smart-grid']
+    for proj in active_projects:
+        # temp uncaugh for debug:
+        run(proj)
+        '''
+        try:
+            run(proj)
+        except Exception as err:
+            print(err)
+            mklog(proj,err)
+        '''
 if __name__ == '__main__':
     Main()

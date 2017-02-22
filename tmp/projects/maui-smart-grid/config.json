@@ -1,0 +1,59 @@
+{
+  "gauges" : {
+    "maui" : 787
+  },
+  "export_fmt" : {
+    "csv" : {
+      "save-to" : "project-directory"
+    },
+    "psql" : {
+      "database"  : "maui",
+      "table"     : "reading",
+      "type-conversions" : {
+        "datetime" : "to-timestamp"
+      }
+    }
+  },
+  "mapping" : {
+    "fields"  : {
+      "timestamp" : {
+        "name"  : "datetime",
+        "index" : 0
+      },
+      "sensor" : {
+        "name"  : "purpose_id",
+        "index" : 1
+      },
+      "unit" : {
+        "name"  : "units",
+        "index" : 2
+      },
+      "value" : {
+        "name"  : "reading",
+        "index" : 3
+      }
+    },
+    "content" : {
+      "sensor" : {
+        "map" : {
+          "usage"       : 31,
+          "plug loads"  : 32,
+          "whole panel" : 33,
+          "lights"      : 34,
+          "fans"        : 35,
+          "mauka portable (P7B AC)" : 36,
+          "makai portable (P7A AC)" : 37
+        },
+        "ignore" : [
+          "generation"
+        ]
+      }
+    },
+    "generated-fields" : {
+      "upload-time" : {
+        "name"  : "upload_timestamp",
+        "index" : 0
+      }
+    }
+  }
+}
