@@ -10,21 +10,31 @@ import os
 # Conforums to guideline that all destination
 # functions should have required args of the
 # form: (data,project,config).
-def to_csv(data,project,csv_config):
+def to_csv(data,project,csv_config,ftxt=''):
     # TODO: use csv config values for something...
-    fname = '{}.csv'.format(time.time())
-    save_csv(data,project,fname)
+    # probably for choosing file txt, etc...
+    save_csv(data,project,ftxt)
 
 # Save it to a thing!
-def save_csv(data,project,fname):
-    projdir = 'tmp/outputs/{}/'.format(project)
-    if not project in os.listdir('tmp/outputs/'):
-        os.mkdir(projdir)
-    if not '.csv' in fname:
-        fname = fname + '.csv'
-    fdir = projdir + fname
+def save_csv(data,project):
+    projdir = dirset(project)
+    fname = fset(ftxt)
+    fpath = projdir + fname
     fields = data[0]._fields
-    with open(fdir,'w') as fp:
+    with open(fpath,'w') as fp:
         writer = csv.writer(fp)
         writer.writerow(fields)
         for d in data: writer.writerow(d)
+
+# set up & return project output dir.
+def dirset(project):
+    projdir = 'tmp/outputs/{}/'.format(project)
+    if not path.isdir(projdir):
+        os.makedirs(projdir)
+    return projdir
+
+# set up & return file name.
+def fset(ftxt):
+    ft = str(int(time.time()))
+    fname = '{}-{}.csv'.format(ftxt,ft)
+    return fname
