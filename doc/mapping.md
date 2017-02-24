@@ -54,7 +54,7 @@ Each content mapping field consists of two sub-fields; a required
 `map` field which actually contains the value mapping, and an
 optional `ignore` field which lists values to ignore.  Any value
 encountered which is not listed in `map` or `ignore` is treated
-as erroneous, and logged to a csv file in `tmp/errors/project-name/...`.
+as erroneous, and logged to a csv file in `tmp/errors/project-name/`.
 The `map` field can contain any numer of key-value pairs, with the
 key being an expected value, and the value being the desired replacement.
 Say, for example, that we wanted to have all units in `kW` be replaced
