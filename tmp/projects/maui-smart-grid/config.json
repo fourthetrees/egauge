@@ -4,7 +4,7 @@
   },
   "export_fmt" : {
     "csv" : {
-      "save-to" : "project-directory"
+      "save-to" : "default"
     },
     "psql" : {
       "database"  : "maui",
