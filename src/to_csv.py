@@ -11,7 +11,7 @@ import os.path as path
 # Conforums to guideline that all destination
 # functions should have required args of the
 # form: (data,project,config).
-def to_csv(data,project,csv_config,ftxt='output'):
+def to_csv(data,project,csv_config,ftxt='raw'):
     # TODO: use csv config values for something...
     # probably for choosing file txt, etc...
     save_csv(data,project,ftxt)
