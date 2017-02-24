@@ -14,6 +14,7 @@ import json
 def run(project):
     os.chdir(dirname(__file__))
     config,nonce= get_params(project)
+    print('querying gauges...')
     data,nonce_new = query_gauges(config["gauges"],nonce)
     handle_data(data,config,project)
     update_nonce(project,nonce_new)
@@ -21,6 +22,7 @@ def run(project):
 # Do something with the data.
 def handle_data(data,config,project):
     if 'mapping' in config:
+        print('reformatting data...')
         data = fmt_mapping(data,config['mapping'])
     if not data: return
     if not 'export_fmt' in config:

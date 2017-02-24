@@ -18,6 +18,7 @@ def to_psql(data,project,psql_config):
 # Actually push the stuff
 def exec_push(data,cmd,db):
     errs = []
+    print('pushing {} rows to database: {}'.format(len(data),db))
     with psql.connect(database=db) as con:
         for row in data:
             try:

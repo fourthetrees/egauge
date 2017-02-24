@@ -22,6 +22,7 @@ def save_csv(data,project,ftxt):
     fname = fset(ftxt)
     fpath = projdir + fname
     fields = data[0]._fields
+    print('writing {} rows to {}'.format(len(data),fpath))
     with open(fpath,'w') as fp:
         writer = csv.writer(fp)
         writer.writerow(fields)
