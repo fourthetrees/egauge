@@ -25,7 +25,7 @@ def fmterr(project,data,txt='fmterr'):
     fpath = errdir + txt + '-'+ str(int(time.time())) + '.csv'
     fields = data[0]._fields
     with open(fpath,'w') as fp:
-        print('writing {} malformed rows to: {}'.format(len(data),fname))
+        print('writing {} malformed rows to: {}'.format(len(data),fpath))
         writer = csv.writer(fp)
         writer.writerow(fields)
         for d in data: writer.writerow(d)

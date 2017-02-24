@@ -4,19 +4,20 @@ from src.errlog import fmterr
 import time
 import csv
 import os
+import os.path as path
 
 # Main save-to-csv entry point.
 # Handles formatting, calculated fields, etc...
 # Conforums to guideline that all destination
 # functions should have required args of the
 # form: (data,project,config).
-def to_csv(data,project,csv_config,ftxt=''):
+def to_csv(data,project,csv_config,ftxt='output'):
     # TODO: use csv config values for something...
     # probably for choosing file txt, etc...
     save_csv(data,project,ftxt)
 
 # Save it to a thing!
-def save_csv(data,project):
+def save_csv(data,project,ftxt):
     projdir = dirset(project)
     fname = fset(ftxt)
     fpath = projdir + fname
